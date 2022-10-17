@@ -12,7 +12,7 @@ const SimpleInput = (props) => {
   let formIsValid = false
 
   if (enteredNameIsvalid) {
-    formIsValid(true)
+    formIsValid = true
   }
 
   const nameInputChangeHandler = (e) => {
