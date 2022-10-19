@@ -1,4 +1,4 @@
-import { useState } from "react";
+
 import useInput from "../hooks/use-input";
 
 
@@ -13,43 +13,37 @@ const SimpleInput = (props) => {
     reset: resetNameInput
   } = useInput(value => value.trim() !== '')
 
-  const [enteredEmail, setEnteredEmail] = useState('')
-  const [enteredEmailTouched, setEnteredEmailTouched] = useState(false)
-
-  const enteredEmailIsValid = enteredEmail.includes('@')
-  const enteredEmailIsInValid = !enteredEmailIsValid && enteredEmailTouched
+  const {
+    value: enteredEmail,
+    isValid: enteredEmailIsvalid,
+    hasError: emailInputHasError,
+    valueChangeHandler: emailChangeHandler,
+    inputBlurHandler: emailBlurHandler,
+    reset: resetEmailInput
+  } = useInput(value => value.includes('@'))
 
   let formIsValid = false
 
-  if (enteredNameIsvalid && enteredEmailIsValid) {
+  if (enteredNameIsvalid && enteredEmailIsvalid) {
     formIsValid = true
-  }
-
-  const emailInputChangeHandler = (e) => {
-    setEnteredEmail(e.target.value)
-  }
-
-  const emailInputBlurHandler = (e) => {
-    setEnteredEmailTouched(true)
   }
 
   const formSubmissionHandler = (e) => {
     e.preventDefault()
-    if (!enteredNameIsvalid) {
+    if (!enteredNameIsvalid && !enteredEmailIsvalid) {
       return
     }
     console.log(enteredName);
     console.log(enteredEmail);
     resetNameInput()
-    setEnteredEmail('')
-    setEnteredEmailTouched(false)
+    resetEmailInput()
   }
 
   const nameInputClasses = nameInputHasError 
     ? 'form-control invalid'
     : 'form-control'
 
-  const emailInputClasses = enteredEmailIsInValid
+  const emailInputClasses = emailInputHasError
     ? 'form-control invalid'
     : 'form-control'
 
@@ -72,10 +66,10 @@ const SimpleInput = (props) => {
           type='email' 
           id='email' 
           value={enteredEmail} 
-          onChange={emailInputChangeHandler} 
-          onBlur={emailInputBlurHandler}
+          onChange={emailChangeHandler} 
+          onBlur={emailBlurHandler}
         />
-        {enteredEmailIsInValid && <p className="error-text">Please enter a valid email</p>}
+        {emailInputHasError && <p className="error-text">Please enter a valid email</p>}
       </div>
       <div className="form-actions">
         <button disabled={!formIsValid}>Submit</button>
